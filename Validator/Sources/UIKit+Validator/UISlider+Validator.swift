@@ -36,6 +36,12 @@ extension UISlider: ValidatableInterfaceElement {
     
     open var inputValue: Float? { return value }
     
+    public func validate<R: ValidationRule>(rule r: R) -> ValidationResult where R.InputType == InputType {
+        let result = Validator.validate(input: inputValue, rule: r)
+        if let h = validationHandler { h(result) }
+        return result
+    }
+    
     open func validateOnInputChange(enabled: Bool) {
         switch enabled {
         case true: addTarget(self, action: #selector(UISlider.validate), for: .valueChanged)

@@ -35,6 +35,12 @@ extension UITextField: ValidatableInterfaceElement {
     
     open var inputValue: String? { return text }
     
+    public func validate<R: ValidationRule>(rule r: R) -> ValidationResult where R.InputType == InputType {
+        let result = Validator.validate(input: inputValue, rule: r)
+        if let h = validationHandler { h(result) }
+        return result
+    }
+    
     open func validateOnInputChange(enabled: Bool) {
         switch enabled {
         case true: addTarget(self, action: #selector(validate), for: .editingChanged)

@@ -14,6 +14,12 @@ extension UITextView: ValidatableInterfaceElement {
     
     open var inputValue: String? { return text }
     
+    public func validate<R: ValidationRule>(rule r: R) -> ValidationResult where R.InputType == InputType {
+        let result = Validator.validate(input: inputValue, rule: r)
+        if let h = validationHandler { h(result) }
+        return result
+    }
+    
     open func validateOnInputChange(enabled: Bool) {
         switch enabled {
         case true: NotificationCenter.default.addObserver(self, selector: #selector(validate), name: Notification.Name.UITextViewTextDidChange, object: self)
